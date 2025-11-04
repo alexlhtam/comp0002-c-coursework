@@ -1,0 +1,62 @@
+# Ignore object files, libraries, executables
+*.o
+*.obj
+*.so
+*.a
+*.lib
+*.dll
+*.exe
+*.out
+
+# Build folders
+/build/
+/bin/
+/dist/
+/out/
+
+# Coverage and profiling
+*.gcda
+*.gcno
+*.prof
+
+# Editor / IDE
+.vscode/
+*.swp
+*.swo
+*.swn
+*.tmp
+*.bak
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Tags and indexes
+tags
+TAGS
+
+# Backup files created by some tools
+# (emacs, etc.)
+.#*
+
+# Visual Studio / Windows build
+*.user
+*.suo
+*.userosscache
+*.VC.db
+*.VC.opendb
+*.pdb
+
+# MinGW/MSYS specific
+*.exe.stackdump
+
+# CMake cache and generated files (if you use CMake later)
+/CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
