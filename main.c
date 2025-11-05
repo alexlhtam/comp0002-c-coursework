@@ -9,6 +9,9 @@
 int main(int argc, char **argv) {
     Robot myRobot;
 
+    (void)argc;
+    (void)argv;
+
     initArena();
     initRobot(&myRobot);
     setWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -16,15 +19,38 @@ int main(int argc, char **argv) {
     drawArena();
 
     while(!atMarker(&myRobot)) {
-        if (canMoveForward(&myRobot)) {
-            forward(&myRobot);
-        } else {
-            right(&myRobot);
-        }
+        // if (canMoveForward(&myRobot)) {
+        //     forward(&myRobot);
+        // } else {
+        //     right(&myRobot);
+        // }
 
         clear();
 
         drawRobot(&myRobot);
         sleep(200);
+
+        /**
+         * wall-follower algorithm
+         */
+        if (canMoveForward(&myRobot)) {
+            forward(&myRobot);
+        } else {
+            left(&myRobot);
+
+            if (canMoveForward(&myRobot)) {
+                forward(&myRobot);
+            } else {
+                left(&myRobot);
+            }
+            
+        }
     }
+
+    clear();
+    drawRobot(&myRobot);
+
+    return 0;
 }
+
+
