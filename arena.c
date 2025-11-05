@@ -1,5 +1,6 @@
 #include "graphics.h"
 #include "arena.h"
+#include <stdlib.h>
 
 int arena[ARENA_HEIGHT][ARENA_WIDTH];
 
@@ -14,7 +15,24 @@ void initArena(void) {
         }
     }
 
-    arena[5][ARENA_WIDTH - 2] = TILE_MARKER; // make random later
+    int marker_x, marker_y;
+    int wallSide = rand() % 4; // 0=top, 1=right, 2=bottom, 3=left
+
+    if (wallSide == 0) { // Top wall
+        marker_x = (rand() % (ARENA_WIDTH - 2)) + 1; 
+        marker_y = 1; 
+    } else if (wallSide == 1) {
+        marker_x = ARENA_WIDTH - 2;
+        marker_y = (rand() % (ARENA_HEIGHT - 2)) + 1;
+    } else if (wallSide == 2) {
+        marker_x = (rand() % (ARENA_WIDTH - 2)) + 1;
+        marker_y = ARENA_HEIGHT - 2;
+    } else {
+        marker_x = 1;
+        marker_y = (rand() % (ARENA_HEIGHT - 2)) + 1;
+    }
+
+    arena[marker_y][marker_x] = TILE_MARKER;
 }
 
 void drawArena(void) {

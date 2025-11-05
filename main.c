@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "graphics.h"
 #include "arena.h"
 #include "robot.h"
@@ -7,10 +9,12 @@
 #define WINDOW_HEIGHT (ARENA_HEIGHT * TILE_SIZE)
 
 int main(int argc, char **argv) {
-    Robot myRobot;
-
+    srand(time(NULL));
+    
     (void)argc;
     (void)argv;
+
+    Robot myRobot;
 
     initArena();
     initRobot(&myRobot);

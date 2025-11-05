@@ -1,11 +1,23 @@
 #include "graphics.h"
 #include "robot.h"
 #include "arena.h"
+#include <stdlib.h>
 
 void initRobot(Robot* robot) {
-    robot->x = 2;
-    robot->y = 2;
-    robot->dir = EAST;
+    int isNextToWall;
+
+    do {
+        robot->x = (rand() % (ARENA_WIDTH - 2)) + 1;
+        robot->y = (rand() % (ARENA_HEIGHT - 2)) + 1;
+    
+        isNextToWall = 0; // Assume it's not
+        if (arena[robot->y - 1][robot->x] == TILE_WALL) isNextToWall = 1;
+        if (arena[robot->y + 1][robot->x] == TILE_WALL) isNextToWall = 1;
+        if (arena[robot->y][robot->x - 1] == TILE_WALL) isNextToWall = 1;
+        if (arena[robot->y][robot->x + 1] == TILE_WALL) isNextToWall = 1;
+    } while (isNextToWall);
+
+    robot->dir = rand() % 4;
     robot->markersCarried = 0;
 }
 
