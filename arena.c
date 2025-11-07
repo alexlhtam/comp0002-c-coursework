@@ -2,12 +2,12 @@
 #include "arena.h"
 #include <stdlib.h>
 
-int arena[ARENA_HEIGHT][ARENA_WIDTH];
 
-void initArena(void) {
-    for (int y = 0; y < ARENA_HEIGHT; y++) {
-        for (int x = 0; x < ARENA_WIDTH; x++) {
-            if (y == 0 || y == ARENA_HEIGHT - 1 || x == 0 || x == ARENA_WIDTH - 1) {
+
+void initArena(int height, int width, int arena[height][width]) {
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            if (y == 0 || y == height - 1 || x == 0 || x == width - 1) {
                 arena[y][x] = TILE_WALL;
             } else {
                 arena[y][x] = TILE_EMPTY;
@@ -19,27 +19,30 @@ void initArena(void) {
     int wallSide = rand() % 4; // 0=top, 1=right, 2=bottom, 3=left
 
     if (wallSide == 0) { // Top wall
-        marker_x = (rand() % (ARENA_WIDTH - 2)) + 1; 
+        marker_x = (rand() % (width - 2)) + 1; 
         marker_y = 1; 
     } else if (wallSide == 1) {
-        marker_x = ARENA_WIDTH - 2;
-        marker_y = (rand() % (ARENA_HEIGHT - 2)) + 1;
+        marker_x = width - 2;
+        marker_y = (rand() % (height - 2)) + 1;
     } else if (wallSide == 2) {
-        marker_x = (rand() % (ARENA_WIDTH - 2)) + 1;
-        marker_y = ARENA_HEIGHT - 2;
+        marker_x = (rand() % (width - 2)) + 1;
+        marker_y = height - 2;
     } else {
         marker_x = 1;
-        marker_y = (rand() % (ARENA_HEIGHT - 2)) + 1;
+        marker_y = (rand() % (height - 2)) + 1;
     }
 
     arena[marker_y][marker_x] = TILE_MARKER;
 }
 
-void drawArena(void) {
+void drawArena(int height, int width, int arena[height][width]) {
     background();
 
-    for (int y = 0; y < ARENA_HEIGHT; y++) {
-        for (int x = 0; x < ARENA_WIDTH; x++) {
+    setColour(white);
+    fillRect(0, 0, width * TILE_SIZE, height * TILE_SIZE);
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
             int pixel_x = x * TILE_SIZE;
             int pixel_y = y * TILE_SIZE;
 
@@ -55,11 +58,11 @@ void drawArena(void) {
 
     setColour(lightgray);
     setLineWidth(1);
-    for (int i = 0; i <= ARENA_WIDTH; i++) {
-        drawLine(i * TILE_SIZE, 0, i * TILE_SIZE, ARENA_HEIGHT * TILE_SIZE);
+    for (int i = 0; i <= width; i++) {
+        drawLine(i * TILE_SIZE, 0, i * TILE_SIZE, height * TILE_SIZE);
     }
-    for (int i = 0; i <= ARENA_HEIGHT; i++) {
-        drawLine(0, i * TILE_SIZE, ARENA_WIDTH * TILE_SIZE, i * TILE_SIZE);
+    for (int i = 0; i <= height; i++) {
+        drawLine(0, i * TILE_SIZE, width * TILE_SIZE, i * TILE_SIZE);
     }
 
     foreground();

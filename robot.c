@@ -3,12 +3,12 @@
 #include "arena.h"
 #include <stdlib.h>
 
-void initRobot(Robot* robot) {
+void initRobot(Robot* robot, int height, int width, int arena[height][width]) {
     int isNextToWall;
 
     do {
-        robot->x = (rand() % (ARENA_WIDTH - 2)) + 1;
-        robot->y = (rand() % (ARENA_HEIGHT - 2)) + 1;
+        robot->x = (rand() % (width - 2)) + 1;
+        robot->y = (rand() % (height - 2)) + 1;
     
         isNextToWall = 0; // Assume it's not
         if (arena[robot->y - 1][robot->x] == TILE_WALL) isNextToWall = 1;
@@ -63,7 +63,7 @@ void right(Robot* robot) {
     robot->dir = (robot->dir + 1) % 4;
 }
 
-int canMoveForward(Robot* robot) {
+int canMoveForward(Robot* robot, int height, int width, int arena[height][width]) {
     int next_x = robot->x;
     int next_y = robot->y;
 
@@ -82,17 +82,68 @@ int canMoveForward(Robot* robot) {
 }
 
 void forward(Robot* robot) {
-    if (canMoveForward(robot)) {
-        if (robot->dir == NORTH) robot->y--;
-        if (robot->dir == EAST)  robot->x++;
-        if (robot->dir == SOUTH) robot->y++;
-        if (robot->dir == WEST)  robot->x--;
-    }
+    if (robot->dir == NORTH) robot->y--;
+    if (robot->dir == EAST)  robot->x++;
+    if (robot->dir == SOUTH) robot->y++;
+    if (robot->dir == WEST)  robot->x--;
 }
 
-int atMarker(Robot* robot) {
+int atMarker(Robot* robot, int height, int width, int arena[height][width]) {
+    (void)height;
+    (void)width;
     if (arena[robot->y][robot->x] == TILE_MARKER) {
         return 1;
     }
+    return 0;
+}
+
+void drawTile(int x, int y) {
+    background();
+
+    setColour(white);
+    fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
+    setColour(lightgray);
+    setLineWidth(1);
+    drawRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
+    foreground();
+}
+
+void pickUpMarker(Robot* robot, int height, int width, int arena[height][width]) {
+    (void)height;
+    (void)width;
+
+    if (arena[robot->y][robot->x] == TILE_MARKER) {
+        arena[robot->y][robot->x] = TILE_EMPTY;
+        robot->markersCarried++;
+        drawTile(robot->x, robot->y);
+    }
+}
+
+void dropMarker(Robot* robot, int height, int width, int arena[height][width]) {
+    (void)height;
+    (void)width;
+    if (robot->markersCarried > 0) {
+        arena[robot->y][robot->x] = TILE_MARKER;
+        robot->markersCarried--;
+
+        background();
+        setColour(gray);
+        fillOval(robot->x * TILE_SIZE + 5, robot->y * TILE_SIZE + 5, TILE_SIZE - 10, TILE_SIZE - 10);
+        foreground();
+    }
+}
+
+int isAtCorner(Robot* robot, int height, int width) {
+    // top left
+    if (robot->x == 1 && robot->y == 1) return 1;
+    // top right
+    if (robot->x == width - 2 && robot->y == 1) return 1;
+    // bottom left
+    if (robot->x == 1 && robot->y == height - 2) return 1;
+    // bottom right
+    if (robot->x == width - 2 && robot->y == height - 2) return 1;
+
     return 0;
 }

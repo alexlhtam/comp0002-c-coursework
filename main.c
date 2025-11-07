@@ -5,8 +5,6 @@
 #include "arena.h"
 #include "robot.h"
 
-#define WINDOW_WIDTH (ARENA_WIDTH * TILE_SIZE)
-#define WINDOW_HEIGHT (ARENA_HEIGHT * TILE_SIZE)
 
 int main(int argc, char **argv) {
     srand(time(NULL));
@@ -14,42 +12,71 @@ int main(int argc, char **argv) {
     (void)argc;
     (void)argv;
 
+    int arena_height = (rand() % 10) + 10;
+    int arena_width = (rand() % 10) + 10;
+    int arena[arena_height][arena_width];
+
     Robot myRobot;
 
-    initArena();
-    initRobot(&myRobot);
-    setWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-    
-    drawArena();
+    initArena(arena_height, arena_width, arena);
+    initRobot(&myRobot, arena_height, arena_width, arena);
 
-    while(!atMarker(&myRobot)) {
+    setWindowSize(arena_width * TILE_SIZE, arena_height * TILE_SIZE);
+    
+    drawArena(arena_height, arena_width, arena);
+
+    while(!atMarker(&myRobot, arena_height, arena_width, arena)) {
         // if (canMoveForward(&myRobot)) {
         //     forward(&myRobot);
         // } else {
         //     right(&myRobot);
         // }
 
-        clear();
-
-        drawRobot(&myRobot);
-        sleep(200);
-
         /**
          * wall-follower algorithm
          */
-        if (canMoveForward(&myRobot)) {
+        if (canMoveForward(&myRobot, arena_height, arena_width, arena)) {
             forward(&myRobot);
         } else {
             left(&myRobot);
-
-            if (canMoveForward(&myRobot)) {
+            
+            if (canMoveForward(&myRobot, arena_height, arena_width, arena)) {
                 forward(&myRobot);
             } else {
                 left(&myRobot);
             }
-            
         }
+
+        clear();
+        drawRobot(&myRobot);
+        sleep(200);
     }
+
+    pickUpMarker(&myRobot, arena_height, arena_width, arena);
+    
+    clear();
+    drawRobot(&myRobot);
+    sleep(500);
+
+    while(!isAtCorner(&myRobot, arena_height, arena_width)) {
+        if (canMoveForward(&myRobot, arena_height, arena_width, arena)) {
+            forward(&myRobot);
+        } else {
+            left(&myRobot);
+
+            if (canMoveForward(&myRobot,arena_height, arena_width, arena)) {
+                forward(&myRobot);
+            } else {
+                left(&myRobot);
+            }
+        }
+
+        clear();
+        drawRobot(&myRobot);
+        sleep(200);
+    }
+
+    dropMarker(&myRobot, arena_height, arena_width, arena);
 
     clear();
     drawRobot(&myRobot);
