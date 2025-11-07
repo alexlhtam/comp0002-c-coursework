@@ -1,4 +1,4 @@
-# --- Variables ---
+# from Google Gemini
 
 # Compiler
 CC = gcc
