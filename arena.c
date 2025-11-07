@@ -15,22 +15,8 @@ void initArena(int height, int width, int arena[height][width]) {
         }
     }
 
-    int marker_x, marker_y;
-    int wallSide = rand() % 4; // 0=top, 1=right, 2=bottom, 3=left
-
-    if (wallSide == 0) { // Top wall
-        marker_x = (rand() % (width - 2)) + 1; 
-        marker_y = 1; 
-    } else if (wallSide == 1) {
-        marker_x = width - 2;
-        marker_y = (rand() % (height - 2)) + 1;
-    } else if (wallSide == 2) {
-        marker_x = (rand() % (width - 2)) + 1;
-        marker_y = height - 2;
-    } else {
-        marker_x = 1;
-        marker_y = (rand() % (height - 2)) + 1;
-    }
+    int marker_x = (rand() % (width - 2)) + 1;
+    int marker_y = (rand() % (height - 2)) + 1;
 
     arena[marker_y][marker_x] = TILE_MARKER;
 }

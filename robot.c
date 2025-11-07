@@ -15,6 +15,10 @@ void initRobot(Robot* robot, int height, int width, int arena[height][width]) {
         if (arena[robot->y + 1][robot->x] == TILE_WALL) isNextToWall = 1;
         if (arena[robot->y][robot->x - 1] == TILE_WALL) isNextToWall = 1;
         if (arena[robot->y][robot->x + 1] == TILE_WALL) isNextToWall = 1;
+
+        // don't let robot start on marker
+        if (arena[robot->y][robot->x] == TILE_MARKER) isNextToWall = 1;
+
     } while (isNextToWall);
 
     robot->dir = rand() % 4;

@@ -25,38 +25,94 @@ int main(int argc, char **argv) {
     
     drawArena(arena_height, arena_width, arena);
 
-    while(!atMarker(&myRobot, arena_height, arena_width, arena)) {
-        // if (canMoveForward(&myRobot)) {
-        //     forward(&myRobot);
-        // } else {
-        //     right(&myRobot);
-        // }
+    while(myRobot.y != 1) {
+        if (myRobot.dir == EAST) left(&myRobot);
+        if (myRobot.dir == SOUTH) { left(&myRobot); left(&myRobot); }
+        if (myRobot.dir == WEST) right(&myRobot);
 
-        /**
-         * wall-follower algorithm
-         */
-        if (canMoveForward(&myRobot, arena_height, arena_width, arena)) {
-            forward(&myRobot);
-        } else {
+        if (!canMoveForward(&myRobot, arena_height, arena_width, arena)) {
+            right(&myRobot);
+            if (canMoveForward(&myRobot, arena_height, arena_width, arena)) {
+                forward(&myRobot);
+            }
             left(&myRobot);
+        } else {
+            forward(&myRobot);
+        }
+
+        clear();
+        drawRobot(&myRobot);
+        sleep(50);
+    }
+
+    while (myRobot.x != 1) {
+        if (myRobot.dir == NORTH) left(&myRobot);
+        if (myRobot.dir == EAST) { left(&myRobot); left(&myRobot); }
+        if (myRobot.dir == SOUTH) right(&myRobot);
+
+        if (!canMoveForward(&myRobot, arena_height, arena_width, arena)) {
+             // sanity check
+            right(&myRobot);
+            if(canMoveForward(&myRobot, arena_height, arena_width, arena)) {
+                forward(&myRobot);
+            }
+            left(&myRobot);
+        } else {
+            forward(&myRobot);
+        }
+        
+        clear();
+        drawRobot(&myRobot);
+        sleep(50);
+    }
+
+    int scanDirection = EAST; 
+    
+    while(!atMarker(&myRobot, arena_height, arena_width, arena)) {
+        
+        if (scanDirection == EAST) {
+ 
+            while (myRobot.dir != EAST) {
+                right(&myRobot); 
+            }
             
             if (canMoveForward(&myRobot, arena_height, arena_width, arena)) {
                 forward(&myRobot);
             } else {
+                // Hit the right wall, move down and reverse
+                right(&myRobot);
+                if(canMoveForward(&myRobot, arena_height, arena_width, arena)) {
+                   forward(&myRobot);
+                }
+                scanDirection = WEST;
+            }
+
+        } else if (scanDirection == WEST) {
+            while (myRobot.dir != WEST) {
                 left(&myRobot);
+            } 
+
+            if (canMoveForward(&myRobot, arena_height, arena_width, arena)) {
+                forward(&myRobot);
+            } else {
+                left(&myRobot);
+                if(canMoveForward(&myRobot, arena_height, arena_width, arena)) {
+                   forward(&myRobot);
+                }
+                scanDirection = EAST;
             }
         }
 
         clear();
         drawRobot(&myRobot);
-        sleep(200);
+        sleep(50);
     }
 
     pickUpMarker(&myRobot, arena_height, arena_width, arena);
     
     clear();
     drawRobot(&myRobot);
-    sleep(500);
+    sleep(50);
 
     while(!isAtCorner(&myRobot, arena_height, arena_width)) {
         if (canMoveForward(&myRobot, arena_height, arena_width, arena)) {
@@ -73,11 +129,10 @@ int main(int argc, char **argv) {
 
         clear();
         drawRobot(&myRobot);
-        sleep(200);
+        sleep(50);
     }
 
     dropMarker(&myRobot, arena_height, arena_width, arena);
-
     clear();
     drawRobot(&myRobot);
 
